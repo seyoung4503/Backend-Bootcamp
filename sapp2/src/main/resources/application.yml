@@ -1,0 +1,3 @@
+#spring.application.name=sapp2
+server:
+  port: 8015
