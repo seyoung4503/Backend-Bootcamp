@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class SappApplicationTests {
@@ -26,6 +30,32 @@ class SappApplicationTests {
 		this.questionRepository.save(q2);
 
 
+	}
+
+	@Test
+	void testFindallJPA() {
+		List<Question> all = this.questionRepository.findAll();
+		assertEquals(6, all.size());
+
+		Question q = all.get(0);
+		assertEquals("sbb가 무엇인가요?", q.getSubject());
+
+	}
+
+	@Test
+	void testFindByIdJPA() {
+		Optional<Question> oq = this.questionRepository.findById(1);
+		if(oq.isPresent()) {
+			Question q = oq.get();
+			assertEquals("sbb가 무엇인가요?", q.getSubject());
+
+		}
+	}
+
+	@Test
+	void testFindBySubjectJPA() {
+		Question q = this.questionRepository.findBySubject("sbb가 무엇인가요?");
+		assertEquals(1, q.getId());
 	}
 	void contextLoads() {
 
