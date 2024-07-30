@@ -4,6 +4,7 @@ import com.example.sapp3.answer.Answer;
 import com.example.sapp3.answer.AnswerRepository;
 import com.example.sapp3.question.Question;
 import com.example.sapp3.question.QuestionRepository;
+import com.example.sapp3.question.QuestionService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class Sapp3ApplicationTests {
+
+	@Autowired
+	private QuestionService questionService;
 
 	@Autowired
 	private QuestionRepository questionRepository;
@@ -141,6 +145,14 @@ class Sapp3ApplicationTests {
 
 	}
 
+	@Test
+	void testJPAAddDummy() {
+		for (int i = 1; i <= 300; i ++) {
+			String subject = String.format("테스트 데이터 입니다.[%03d]", i);
+			String content = "내용";
+			this.questionService.create(subject, content);
+		}
+	}
 
 
 
