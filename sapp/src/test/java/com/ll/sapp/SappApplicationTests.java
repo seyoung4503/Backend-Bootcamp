@@ -57,8 +57,11 @@ class SappApplicationTests {
 		Question q = this.questionRepository.findBySubject("sbb가 무엇인가요?");
 		assertEquals(1, q.getId());
 	}
-	void contextLoads() {
-
+	@Test
+	void testFindBySubjectAndContentJpa() {
+		Question q = this.questionRepository.findBySubjectAndContent(
+				"sbb가 무엇인가요?", "sbb에 대해 알고 싶어요.");
+		assertEquals(1, q.getId());
 	}
 
 }
