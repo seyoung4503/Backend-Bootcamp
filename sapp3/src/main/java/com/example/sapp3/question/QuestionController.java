@@ -3,12 +3,11 @@ package com.example.sapp3.question;
 import com.example.sapp3.answer.AnswerForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequestMapping("/question")
 @RequiredArgsConstructor // 롬복이 생성, final이 붙은 생성자를 자동으로 만들어준다. questionRepository
@@ -17,16 +16,22 @@ public class QuestionController {
 //    private final QuestionRepository questionRepository;
 
     private final QuestionService questionService;
+
+
     @GetMapping("/list")
 //    @ResponseBody
-    public String list(Model model) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
 //        // Model은 자바 클래스와 템플릿 간의 연결고리이다.
 //        List<Question> questionList = this.questionRepository.findAll();
 //        model.addAttribute("questionList", questionList);
 //
 
-        List<Question> questionList = this.questionService.getList();
-        model.addAttribute("questionList", questionList);
+//        List<Question> questionList = this.questionService.getList();
+//        model.addAttribute("questionList", questionList);
+//        return "question_list";
+
+        Page<Question> paging = this.questionService.getList(page);
+        model.addAttribute("paging", paging);
         return "question_list";
     }
 
@@ -50,5 +55,7 @@ public class QuestionController {
         this.questionService.create(questionForm.getSubject(), questionForm.getContent());
         return "redirect:/question/list"; // 질문 저장후 페이지로 이동
     }
+
+
 
 }
