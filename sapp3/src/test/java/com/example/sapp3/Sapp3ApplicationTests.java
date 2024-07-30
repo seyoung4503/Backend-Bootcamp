@@ -1,5 +1,10 @@
 package com.example.sapp3;
 
+import com.example.sapp3.answer.Answer;
+import com.example.sapp3.answer.AnswerRepository;
+import com.example.sapp3.question.Question;
+import com.example.sapp3.question.QuestionRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +22,8 @@ class Sapp3ApplicationTests {
 	@Autowired
 	private QuestionRepository questionRepository;
 
+	@Autowired
+	private AnswerRepository answerRepository;
 	@Test
 	void testJPA() {
 		Question q1 = new Question();
@@ -91,6 +98,49 @@ class Sapp3ApplicationTests {
 		this.questionRepository.delete(q);
 		assertEquals(1, this.questionRepository.count());
 	}
+
+	// question id를 fk로 받아 테이블을 생성하므로 두번 실행하면 두번 테이블에 추가된다.
+	@Test
+	void testJPASavaAnswer() {
+		Optional<Question> oq = this.questionRepository.findById(2);
+		assertTrue(oq.isPresent());
+		Question q = oq.get();
+		Answer a = new Answer();
+		a.setContent("네 자동으로 생성됩니다.");
+		a.setQuestion(q);
+		a.setCreateDate(LocalDateTime.now());
+		this.answerRepository.save(a);
+	}
+
+	// a.getQuestion()는 question 객체
+	// Answer.java 참고
+	// @ManyToOne
+	// private Question question;
+	@Test
+	void testJPAGetQuestion() {
+		Optional<Answer> oa = this.answerRepository.findById(1);
+		assertTrue(oa.isPresent());
+		Answer a = oa.get();
+		assertEquals(2, a.getQuestion().getId());
+	}
+
+	// Transactional 어노테이션은 작업이 끝날 때까지 원자성, 일관성 보장한다.
+	// 중첩된 Transactional을 하려면  @Transactional(propagation = Propagation.NESTED) 를 붙이자.
+	// 내부 트렌젝션의 롤백은 외부 트렌젝션에 영향을 미치지 않는다.
+	@Transactional // 메서드가 종료될 때까지 db 연결 유지
+	@Test
+	void testJPAGetAnswer() {
+		Optional<Question> oq = this.questionRepository.findById(2); // 시도후 바로 연결 종료 -> 에러 발생
+		// 실제 서비스에선 db와의 연결이 끊기지 않아 오류 없음
+		assertTrue(oq.isPresent());
+		Question q = oq.get();
+
+		List<Answer> answerList = q.getAnswerList();
+		assertEquals(1, answerList.size());
+		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+
+	}
+
 
 
 

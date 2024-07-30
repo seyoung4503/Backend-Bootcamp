@@ -1,4 +1,4 @@
-package com.example.sapp3;
+package com.example.sapp3.answer;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

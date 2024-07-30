@@ -1,5 +1,6 @@
-package com.example.sapp3;
+package com.example.sapp3.answer;
 
+import com.example.sapp3.question.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
