@@ -1,1 +1,2 @@
-spring.application.name=demo03
+server:
+  port: 8015
