@@ -60,4 +60,32 @@ public class TodoController {
 
         return todo;
     }
+
+    @GetMapping("/remove/{id}")
+    public Boolean remove(
+            @PathVariable long id
+    ) {
+        boolean removed = todos.removeIf((todo -> todo.getId() == id));
+
+        return removed;
+    }
+
+    @GetMapping("/modify/{id}")
+    public Boolean modify(
+            @PathVariable long id,
+            String body
+    ) {
+        Todo todo = todos
+                .stream()
+                .filter(
+                        _todo -> _todo.getId() == id
+                )
+                .findFirst()
+                .orElse(null);
+
+        if(todo == null) return false;
+        todo.setBody(body);
+
+        return true;
+    }
 }
